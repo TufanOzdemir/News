@@ -1,9 +1,9 @@
 ﻿using Helpers.Interfaces;
+using Interfaces.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Models.HelperModels;
 using Models.Interfaces;
-using Repository.Base.Interfaces;
 
 namespace Repository.Base.Services
 {

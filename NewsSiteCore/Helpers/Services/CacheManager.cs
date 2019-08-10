@@ -1,4 +1,5 @@
-﻿using Helpers.Interfaces;
+﻿using Helpers.HelperModels;
+using Helpers.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Models.HelperModels;
@@ -202,10 +203,19 @@ namespace Helpers.Services
             return value;
         }
 
-        public T GetObject<T>(string key) where T : class
+        public Result<T> GetObject<T>(string key) where T : class
         {
+            Result<T> result;
             _cache.TryGetValue(key, out T value);
-            return value;
+            if (value == null)
+            {
+                result = new Result<T>(false,Enums.Common.ResultType.Warning,"Not Found!");
+            }
+            else
+            {
+                result = new Result<T>(value);
+            }
+            return result;
         }
 
 

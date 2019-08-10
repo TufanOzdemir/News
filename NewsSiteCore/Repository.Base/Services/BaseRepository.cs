@@ -1,9 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Interfaces.RepositoryInterfaces;
+using Microsoft.EntityFrameworkCore;
 using Models.Interfaces;
-using Repository.Base.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Repository.Base.Services
 {

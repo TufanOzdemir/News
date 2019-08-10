@@ -1,10 +1,7 @@
-﻿using Models.DbModels;
-using Repository.Base.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Interfaces.RepositoryInterfaces;
+using Models.DbModels;
 
-namespace Repository.News.Interfaces
+namespace Interfaces.ServiceInterfaces
 {
     public interface INewsContextProvider
     {

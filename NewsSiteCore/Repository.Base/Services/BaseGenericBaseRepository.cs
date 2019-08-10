@@ -1,14 +1,14 @@
 ﻿using Extensions;
+using Helpers.HelperModels;
 using Helpers.Interfaces;
+using Interfaces.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Models.Interfaces;
-using Repository.Base.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Repository.Base.Services
@@ -37,60 +37,72 @@ namespace Repository.Base.Services
             DbSet = Context.Set<TModel>();
         }
 
-        private async Task<List<U>> QueryableToListAsync<U>(IQueryable<U> queryable)
+        private async Task<Result<List<U>>> QueryableToListAsync<U>(IQueryable<U> queryable)
         {
+            Result<List<U>> result;
             try
             {
-                return await queryable.ToListAsync();
+                result = new Result<List<U>>(await queryable.ToListAsync());
             }
             catch (Exception exc)
             {
                 Logger.LogError(exc, $"Error on get list: {typeof(U).Name}.");
-                return null;
+                result = new Result<List<U>>(false, Enums.Common.ResultType.Error, $"Error on get list: {typeof(U).Name}.");
             }
+            return result;
         }
 
-        public async Task<(bool success, int count)> DeleteAsync(Expression<Func<TModel, bool>> predicate)
+        public async Task<Result<string>> DeleteAsync(Expression<Func<TModel, bool>> predicate)
         {
+            Result<string> result;
             try
             {
                 var objects = await QueryableToListAsync(DbSet.Where(predicate));
-                if (objects != null)
+                int count = 0;
+                if (objects.IsSuccess)
                 {
-                    DbSet.RemoveRange(objects);
-                    return (true, Context.SaveChanges());
+                    DbSet.RemoveRange(objects.Data);
+                    count = Context.SaveChanges();
                 }
-                return (true, 0);
+                result = new Result<string>(true, Enums.Common.ResultType.Success, count.ToString());
             }
             catch (Exception exc)
             {
                 Logger.LogError(exc, $"Error on delete {typeof(TModel).Name}.");
-                return (false, 0);
+                result = new Result<string>(false, Enums.Common.ResultType.Error, $"Error on delete {typeof(TModel).Name}.");
             }
+            return result;
         }
 
-        public async Task<TModel> FirstOrDefaultAsync(Expression<Func<TModel, bool>> predicate)
+        public async Task<Result<TModel>> FirstOrDefaultAsync(Expression<Func<TModel, bool>> predicate)
         {
-            return await DbSet.AsNoTracking().FirstOrDefaultAsync(predicate);
+            return new Result<TModel>(await DbSet.AsNoTracking().FirstOrDefaultAsync(predicate));
         }
 
-        public async Task<List<TModel>> GetListAsync(Expression<Func<TModel, bool>> predicate)
+        public async Task<Result<List<TModel>>> GetListAsync(Expression<Func<TModel, bool>> predicate)
         {
             return await QueryableToListAsync(DbSet.Where(predicate).OrderByDescending(DefaultSortExpression));
         }
 
-        public async Task<List<TModel>> GetListAsync()
+        public async Task<Result<List<TModel>>> GetListAsync()
         {
             return await QueryableToListAsync(DbSet.OrderByDescending(DefaultSortExpression).AsNoTracking());
         }
 
-        public async Task<List<TModel>> GetListFromCacheAsync()
+        public async Task<Result<List<TModel>>> GetListFromCacheAsync()
         {
             var key = typeof(TModel).FullName;
-            return CacheManager.GetObject<List<TModel>>(key) ?? CacheManager.Set(key, await GetListAsync());
+            var cacheValue = CacheManager.GetObject<List<TModel>>(key);
+            if (!cacheValue.IsSuccess)
+            {
+                var dbList = await GetListAsync();
+                cacheValue = dbList;
+                CacheManager.Set(key, cacheValue);
+            }
+            return cacheValue;
         }
 
-        public async Task<(bool success, int count)> SaveOrUpdateWithoutCatchAsync(TModel entity)
+        public async Task<Result<string>> SaveOrUpdateWithoutCatchAsync(TModel entity)
         {
             if (IsPersistent(entity))
             {
@@ -104,7 +116,7 @@ namespace Repository.Base.Services
 
             var changes = await Context.SaveChangesAsync();
 
-            return (true, changes);
+            return new Result<string>(true, Enums.Common.ResultType.Success, changes.ToString());
         }
 
         protected bool IsPersistent(IDbEntity<TKey> entity)
@@ -112,7 +124,7 @@ namespace Repository.Base.Services
             return !entity.Id.Equals(default(TKey));
         }
 
-        public async Task<(bool success, int count)> SaveOrUpdateAsync(TModel entity)
+        public async Task<Result<string>> SaveOrUpdateAsync(TModel entity)
         {
             try
             {
@@ -121,29 +133,31 @@ namespace Repository.Base.Services
             catch (Exception ex)
             {
                 Logger.LogError(ex, $"Error on update {typeof(TModel).Name}.");
-                return (false, 0);
+                return new Result<string>(false, Enums.Common.ResultType.Error, $"Error on update {typeof(TModel).Name}.");
             }
         }
-        public async Task<(bool success, int count)> BulkSaveOrUpdateAsync(List<TModel> entities)
+        public async Task<Result<string>> BulkSaveOrUpdateAsync(List<TModel> entities)
         {
+            Result<string> result;
             try
             {
                 foreach (var entity in entities)
                 {
                     await SaveOrUpdateWithoutCatchAsync(entity);
                 }
-                return (true, entities.Count);
+                result = new Result<string>(true, Enums.Common.ResultType.Success, entities.Count.ToString());
             }
             catch (DbUpdateException duEx)
             {
                 Logger.LogError(duEx, entities.ToJson());
-                return (false, 0);
+                result = new Result<string>(false, Enums.Common.ResultType.Error, entities.ToJson().ToString());
             }
             catch (Exception ex)
             {
                 Logger.LogError(ex, $"Error on update {typeof(TModel).Name}.");
-                return (false, 0);
+                result = new Result<string>(false, Enums.Common.ResultType.Error, $"Error on update {typeof(TModel).Name}.");
             }
+            return result;
         }
     }
 }

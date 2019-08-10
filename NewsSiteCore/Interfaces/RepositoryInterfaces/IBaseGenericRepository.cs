@@ -1,4 +1,6 @@
-﻿using Helpers.Interfaces;
+﻿using Helpers.HelperModels;
+using Helpers.Interfaces;
+using Interfaces.ResultModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Models.Interfaces;
@@ -8,7 +10,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository.Base.Interfaces
+namespace Interfaces.RepositoryInterfaces
 {
     public interface IBaseGenericRepository<TModel, TKey, CustomDbContext>
         where TModel : class, IDbEntity<TKey>
@@ -18,11 +20,11 @@ namespace Repository.Base.Interfaces
         ICacheManager CacheManager { get; }
         ILogger<IBaseGenericRepository<TModel, TKey, CustomDbContext>> Logger { get; }
         DbSet<TModel> DbSet { get; }
-        Task<TModel> FirstOrDefaultAsync(Expression<Func<TModel, bool>> predicate);
-        Task<(bool success, int count)> SaveOrUpdateAsync(TModel entity);
-        Task<List<TModel>> GetListAsync(Expression<Func<TModel, bool>> predicate);
-        Task<List<TModel>> GetListAsync();
-        Task<List<TModel>> GetListFromCacheAsync();
-        Task<(bool success, int count)> DeleteAsync(Expression<Func<TModel, bool>> predicate);
+        Task<Result<TModel>> FirstOrDefaultAsync(Expression<Func<TModel, bool>> predicate);
+        Task<Result<string>> SaveOrUpdateAsync(TModel entity);
+        Task<Result<List<TModel>>> GetListAsync(Expression<Func<TModel, bool>> predicate);
+        Task<Result<List<TModel>>> GetListAsync();
+        Task<Result<List<TModel>>> GetListFromCacheAsync();
+        Task<Result<string>> DeleteAsync(Expression<Func<TModel, bool>> predicate);
     }
 }

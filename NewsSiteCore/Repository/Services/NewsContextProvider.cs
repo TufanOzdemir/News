@@ -1,11 +1,8 @@
-﻿using Models.DbModels;
+﻿using Interfaces.RepositoryInterfaces;
+using Interfaces.ServiceInterfaces;
+using Models.DbModels;
 using Models.HelperModels;
 using Models.Interfaces;
-using Repository.Base.Interfaces;
-using Repository.News.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Repository.Services
 {
