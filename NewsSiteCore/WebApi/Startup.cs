@@ -1,6 +1,6 @@
-﻿using Helpers.Interfaces;
-using Helpers.Services;
-using Interface.ServiceInterfaces;
+﻿using Helpers.Services;
+using Interface.HelperInterfaces;
+using Interfaces.HelperInterfaces;
 using Interfaces.RepositoryInterfaces;
 using Interfaces.ServiceInterfaces;
 using Microsoft.AspNetCore.Builder;
@@ -15,7 +15,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Models.DbModels;
 using Models.HelperModels;
-using Models.HelperModels.DependencyModels.Interfaces;
 using Models.HelperModels.DependencyModels.Services;
 using Repository.Base.Services;
 using Repository.Services;

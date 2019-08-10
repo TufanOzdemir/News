@@ -1,7 +1,6 @@
-﻿using Helpers.HelperModels;
-using IdentityData.Identity;
+﻿using IdentityData.Identity;
+using Interfaces.ResultModel;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -11,7 +10,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using WebApi.Models;
-using static Enums.Common;
+using static Interfaces.Enums.Common;
 
 namespace WebApi.Controllers
 {

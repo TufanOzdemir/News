@@ -1,4 +1,4 @@
-﻿using Helpers.Interfaces;
+﻿using Interfaces.HelperInterfaces;
 using Interfaces.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;

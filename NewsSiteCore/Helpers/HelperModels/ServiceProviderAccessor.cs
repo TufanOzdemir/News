@@ -1,4 +1,4 @@
-﻿using Models.HelperModels.DependencyModels.Interfaces;
+﻿using Interfaces.HelperInterfaces;
 using System;
 using System.Threading;
 

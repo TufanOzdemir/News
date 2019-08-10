@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Interfaces.HelperInterfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Models.HelperModels.DependencyModels.Interfaces;
 using System;
 
 namespace Models.HelperModels

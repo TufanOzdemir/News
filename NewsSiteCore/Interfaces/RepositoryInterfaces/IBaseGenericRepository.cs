@@ -1,5 +1,4 @@
-﻿using Helpers.HelperModels;
-using Helpers.Interfaces;
+﻿using Interfaces.HelperInterfaces;
 using Interfaces.ResultModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -7,7 +6,6 @@ using Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Interfaces.RepositoryInterfaces

@@ -1,5 +1,5 @@
-﻿using Helpers.HelperModels;
-using Helpers.Interfaces;
+﻿using Interfaces.HelperInterfaces;
+using Interfaces.ResultModel;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Models.HelperModels;
@@ -10,8 +10,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Cache;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
+using static Interfaces.Enums.Common;
 
 namespace Helpers.Services
 {
@@ -209,7 +209,7 @@ namespace Helpers.Services
             _cache.TryGetValue(key, out T value);
             if (value == null)
             {
-                result = new Result<T>(false,Enums.Common.ResultType.Warning,"Not Found!");
+                result = new Result<T>(false, ResultType.Warning,"Not Found!");
             }
             else
             {

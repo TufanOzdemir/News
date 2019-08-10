@@ -1,7 +1,7 @@
 ﻿using Extensions;
-using Helpers.HelperModels;
-using Helpers.Interfaces;
+using Interfaces.HelperInterfaces;
 using Interfaces.RepositoryInterfaces;
+using Interfaces.ResultModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Models.Interfaces;
@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using static Interfaces.Enums.Common;
 
 namespace Repository.Base.Services
 {
@@ -47,7 +48,7 @@ namespace Repository.Base.Services
             catch (Exception exc)
             {
                 Logger.LogError(exc, $"Error on get list: {typeof(U).Name}.");
-                result = new Result<List<U>>(false, Enums.Common.ResultType.Error, $"Error on get list: {typeof(U).Name}.");
+                result = new Result<List<U>>(false, ResultType.Error, $"Error on get list: {typeof(U).Name}.");
             }
             return result;
         }
@@ -64,12 +65,12 @@ namespace Repository.Base.Services
                     DbSet.RemoveRange(objects.Data);
                     count = Context.SaveChanges();
                 }
-                result = new Result<string>(true, Enums.Common.ResultType.Success, count.ToString());
+                result = new Result<string>(true, ResultType.Success, count.ToString());
             }
             catch (Exception exc)
             {
                 Logger.LogError(exc, $"Error on delete {typeof(TModel).Name}.");
-                result = new Result<string>(false, Enums.Common.ResultType.Error, $"Error on delete {typeof(TModel).Name}.");
+                result = new Result<string>(false, ResultType.Error, $"Error on delete {typeof(TModel).Name}.");
             }
             return result;
         }
@@ -116,7 +117,7 @@ namespace Repository.Base.Services
 
             var changes = await Context.SaveChangesAsync();
 
-            return new Result<string>(true, Enums.Common.ResultType.Success, changes.ToString());
+            return new Result<string>(true, ResultType.Success, changes.ToString());
         }
 
         protected bool IsPersistent(IDbEntity<TKey> entity)
@@ -133,7 +134,7 @@ namespace Repository.Base.Services
             catch (Exception ex)
             {
                 Logger.LogError(ex, $"Error on update {typeof(TModel).Name}.");
-                return new Result<string>(false, Enums.Common.ResultType.Error, $"Error on update {typeof(TModel).Name}.");
+                return new Result<string>(false, ResultType.Error, $"Error on update {typeof(TModel).Name}.");
             }
         }
         public async Task<Result<string>> BulkSaveOrUpdateAsync(List<TModel> entities)
@@ -145,17 +146,17 @@ namespace Repository.Base.Services
                 {
                     await SaveOrUpdateWithoutCatchAsync(entity);
                 }
-                result = new Result<string>(true, Enums.Common.ResultType.Success, entities.Count.ToString());
+                result = new Result<string>(true, ResultType.Success, entities.Count.ToString());
             }
             catch (DbUpdateException duEx)
             {
                 Logger.LogError(duEx, entities.ToJson());
-                result = new Result<string>(false, Enums.Common.ResultType.Error, entities.ToJson().ToString());
+                result = new Result<string>(false, ResultType.Error, entities.ToJson().ToString());
             }
             catch (Exception ex)
             {
                 Logger.LogError(ex, $"Error on update {typeof(TModel).Name}.");
-                result = new Result<string>(false, Enums.Common.ResultType.Error, $"Error on update {typeof(TModel).Name}.");
+                result = new Result<string>(false, ResultType.Error, $"Error on update {typeof(TModel).Name}.");
             }
             return result;
         }
