@@ -24,5 +24,6 @@ namespace Interfaces.RepositoryInterfaces
         Task<Result<List<TModel>>> GetListAsync();
         Task<Result<List<TModel>>> GetListFromCacheAsync();
         Task<Result<string>> DeleteAsync(Expression<Func<TModel, bool>> predicate);
+        Task<Result<string>> SaveOrUpdateClearCacheAsync(TModel entity);
     }
 }

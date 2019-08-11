@@ -3,6 +3,7 @@ using Interfaces.HelperInterfaces;
 using Interfaces.RepositoryInterfaces;
 using Interfaces.ResultModel;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Models.Interfaces;
 using System;
@@ -98,7 +99,7 @@ namespace Repository.Base.Services
             {
                 var dbList = await GetListAsync();
                 cacheValue = dbList;
-                CacheManager.Set(key, cacheValue);
+                CacheManager.Set(key, cacheValue.Data);
             }
             return cacheValue;
         }
@@ -159,6 +160,33 @@ namespace Repository.Base.Services
                 result = new Result<string>(false, ResultType.Error, $"Error on update {typeof(TModel).Name}.");
             }
             return result;
+        }
+
+        public async Task<Result<string>> SaveOrUpdateClearCacheAsync(TModel entity)
+        {
+            var result = await SaveOrUpdateAsync(entity);
+            if (result.IsSuccess)
+            {
+                ClearRelatedCache<TModel>();
+            }
+
+            return result;
+        }
+
+        protected void ClearRelatedCache<U>() where U : class
+        {
+            try
+            {
+                string typeName = typeof(U).Name;
+                string key = typeName.Contains("_") ? typeName.Split('_')[0] : typeName;
+
+                CacheManager.Clear(key);
+                CacheManager.Clear(typeof(TModel).FullName);
+            }
+            catch (Exception exc)
+            {
+                Logger.LogError(exc, $"Error on clearing cache. cacheKey {typeof(U).Name}.");
+            }
         }
     }
 }
