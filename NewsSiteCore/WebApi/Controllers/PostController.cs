@@ -1,4 +1,5 @@
-﻿using Interfaces.ResultModel;
+﻿using Extensions;
+using Interfaces.ResultModel;
 using Interfaces.ServiceInterfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -23,10 +24,10 @@ namespace WebApi.Controllers
         }
 
         [Route("Get")]
-        public async Task<IActionResult> Get(int[] cityIds = null)
+        public async Task<IActionResult> Get(int[] cityIds)
         {
             Result<List<Post>> result = await _dbProvider.Posts.GetListFromCacheAsync();
-            if (cityIds != null)
+            if (cityIds.Any())
             {
                 result.Data = result.Data.Where(c=> cityIds.Contains(c.CityId)).ToList();
             }
@@ -46,6 +47,7 @@ namespace WebApi.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Save([FromBody]Post post)
         {
+            post.UserId = User.GetUserId();
             var result = await _dbProvider.Posts.SaveOrUpdateClearCacheAsync(post);
             return Json(result);
         }

@@ -1,5 +1,6 @@
 ﻿using IdentityData.Identity;
 using Interfaces.ResultModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -56,6 +57,24 @@ namespace WebApi.Controllers
             }
 
             return Json(result);
+        }
+
+
+        [HttpPost]
+        [Route("Register")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Register([FromBody]RegisterViewModel model)
+        {
+            var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+            var userResult = await _userManager.CreateAsync(user, model.Password);
+            if (userResult.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, model.Role);
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return Ok(true);
+            }
+            return BadRequest(false);
         }
 
         private async Task<string> GenerateToken(string userName)
