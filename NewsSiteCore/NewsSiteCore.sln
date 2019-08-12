@@ -35,6 +35,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsMobile.iOS", "Mobile\Ne
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewsMobile", "Mobile\NewsMobile\NewsMobile\NewsMobile.csproj", "{9D7A5DD7-8950-4EA2-826B-1F559433DABE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{ACACD467-38A0-4A4F-B9C5-15567468A945}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebUI", "WebUI\WebUI.csproj", "{7FD5E706-F5CE-4CE9-A936-25215B26A13D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -169,6 +173,18 @@ Global
 		{9D7A5DD7-8950-4EA2-826B-1F559433DABE}.Release|iPhone.Build.0 = Release|Any CPU
 		{9D7A5DD7-8950-4EA2-826B-1F559433DABE}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{9D7A5DD7-8950-4EA2-826B-1F559433DABE}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{7FD5E706-F5CE-4CE9-A936-25215B26A13D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FD5E706-F5CE-4CE9-A936-25215B26A13D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FD5E706-F5CE-4CE9-A936-25215B26A13D}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{7FD5E706-F5CE-4CE9-A936-25215B26A13D}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{7FD5E706-F5CE-4CE9-A936-25215B26A13D}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{7FD5E706-F5CE-4CE9-A936-25215B26A13D}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{7FD5E706-F5CE-4CE9-A936-25215B26A13D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FD5E706-F5CE-4CE9-A936-25215B26A13D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FD5E706-F5CE-4CE9-A936-25215B26A13D}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{7FD5E706-F5CE-4CE9-A936-25215B26A13D}.Release|iPhone.Build.0 = Release|Any CPU
+		{7FD5E706-F5CE-4CE9-A936-25215B26A13D}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{7FD5E706-F5CE-4CE9-A936-25215B26A13D}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -188,6 +204,7 @@ Global
 		{4C1E4C7C-A23F-46EC-96EB-269C19B2F13A} = {48AFDEE0-CCB5-4071-B93F-647A7F89F1DC}
 		{28FDE4A1-6C4B-4C15-A654-6A8323FB57AB} = {48AFDEE0-CCB5-4071-B93F-647A7F89F1DC}
 		{9D7A5DD7-8950-4EA2-826B-1F559433DABE} = {48AFDEE0-CCB5-4071-B93F-647A7F89F1DC}
+		{7FD5E706-F5CE-4CE9-A936-25215B26A13D} = {ACACD467-38A0-4A4F-B9C5-15567468A945}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B82A69F1-5ED3-4FBC-AA5A-CEF2DAF3C7F5}
