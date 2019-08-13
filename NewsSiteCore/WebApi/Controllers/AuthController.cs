@@ -1,4 +1,6 @@
-﻿using IdentityData.Identity;
+﻿using Extensions;
+using IdentityData.Identity;
+using Interface.HelperInterfaces;
 using Interfaces.ResultModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -21,17 +23,17 @@ namespace WebApi.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        //private readonly IEmailSender _emailSender;
+        private readonly IEmailSender _emailSender;
 
         public AuthController(
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager
-            //IEmailSender emailSender
+            SignInManager<ApplicationUser> signInManager,
+            IEmailSender emailSender
             )
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            //_emailSender = emailSender;
+            _emailSender = emailSender;
         }
 
         [HttpPost]
@@ -69,9 +71,11 @@ namespace WebApi.Controllers
             var userResult = await _userManager.CreateAsync(user, model.Password);
             if (userResult.Succeeded)
             {
+                //var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, "", Request.Scheme);
                 await _userManager.AddToRoleAsync(user, model.Role);
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 await _signInManager.SignInAsync(user, isPersistent: false);
+                await _emailSender.SendEmailConfirmationAsync(model.Email, "");
                 return Ok(true);
             }
             return BadRequest(false);

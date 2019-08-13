@@ -60,8 +60,7 @@ namespace WebApi
                 };
             });
 
-            services.AddTransient<IEmailSender, EmailSender>();
-
+            services.AddSingleton<IEmailSender, EmailSender>();
             services.AddSingleton(Configuration);
             services.AddSingleton<ICacheManager, CacheManager>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -71,6 +70,9 @@ namespace WebApi
             services.AddScoped(typeof(IBaseGenericRepository<,,>), typeof(BaseGenericBaseRepository<,,>));
             services.AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>));
             services.AddScoped<INewsContextProvider, NewsContextProvider>();
+
+            services.AddOptions();
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddMemoryCache();
