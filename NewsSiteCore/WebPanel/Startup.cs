@@ -1,16 +1,24 @@
 ﻿using IdentityData.Identity;
 using Interface.HelperInterfaces;
+using Interfaces.HelperInterfaces;
+using Interfaces.RepositoryInterfaces;
+using Interfaces.ServiceInterfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Models.DbModels;
 using Models.HelperModels;
+using Models.HelperModels.DependencyModels.Services;
+using Repository.Base.Services;
+using Repository.Services;
 using Services.IdentityServices;
 
 namespace WebPanel
@@ -37,26 +45,30 @@ namespace WebPanel
             services.AddDbContext<NewsContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>(
-                config =>
-                {
-                    config.SignIn.RequireConfirmedEmail = true;
-                    config.User.RequireUniqueEmail = true;
-                })
+            services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<NewsContext>()
                 .AddDefaultTokenProviders();
 
             services.AddOptions();
             services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
-            services.AddSingleton<IEmailSender, EmailSender>();
+            services.AddScoped(typeof(IBaseGenericRepository<,,>), typeof(BaseGenericBaseRepository<,,>));
+            services.AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>));
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddSingleton<IEmailSender, EmailSender>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
+            services.AddSingleton<IServiceProviderAccessor, ServiceProviderAccessor>();
+            services.AddSingleton<INewsContextProvider, NewsContextProvider>();
+            services.AddSingleton<PartialViewResultExecutor>();
+            services.AddMvc(options => options.EnableEndpointRouting = false).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHttpContextAccessor httpContextAccessor, IServiceProviderAccessor serviceProviderAccessor, IHostingEnvironment env)
         {
+            ServiceGetter.SetAccessor(httpContextAccessor);
+            ServiceGetter.SetAccessor(serviceProviderAccessor);
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

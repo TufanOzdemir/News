@@ -1,0 +1,20 @@
+﻿@model Interfaces.ResultModel.Result<Models.DbModels.City>
+
+<div class="row">
+    <div class="col-md-4">
+        <form id="form-city">
+            <input type="hidden" asp-for="Data.Id" />
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Data.Name" class="control-label"></label>
+                <input asp-for="Data.Name" class="form-control" />
+                <span asp-validation-for="Data.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Data.Code" class="control-label"></label>
+                <input asp-for="Data.Code" class="form-control" />
+                <span asp-validation-for="Data.Code" class="text-danger"></span>
+            </div>
+        </form>
+    </div>
+</div>

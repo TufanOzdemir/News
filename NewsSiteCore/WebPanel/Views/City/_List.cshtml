@@ -1,0 +1,27 @@
+﻿@using Models.DbModels
+@using Interfaces.ResultModel
+@model Result<List<City>>
+
+<h2>Kategoriler</h2>
+<input type="button" class="btn btn-primary" onclick="Web.Panel.City.new()" value="Yeni Şehir Ekle"/>
+<br />
+<br />
+<table class="table">
+    <thead class="thead">
+        <tr>
+            <th scope="col">Plaka Kodu</th>
+            <th scope="col">Şehir Adı</th>
+            <th scope="col">İşlemler</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Data)
+        {
+            <tr>
+                <th scope="row">@item.Code</th>
+                <td>@item.Name</td>
+                <td><input type="button" class="btn btn-warning" onclick="Web.Panel.City.edit('@item.Id')" value="Güncelle" /> <input type="button" class="btn btn-danger" onclick="Web.Panel.City.confirmDelete('@item.Id','Emin misiniz?')" value="Sil" /></td>
+            </tr>
+        }
+    </tbody>
+</table>

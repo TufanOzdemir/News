@@ -8,6 +8,7 @@ namespace Interfaces.ResultModel
         public string Message { get; set; }
         public ResultType Type { get; set; }
         public bool IsSuccess { get; set; }
+        public string Html { get; set; }
 
         public Result()
         {
@@ -15,7 +16,7 @@ namespace Interfaces.ResultModel
         }
 
         public Result(T Data)
-            : this(true, ResultType.None, string.Empty, Data)
+            : this(true, ResultType.Information, string.Empty, Data)
         {
         }
 
